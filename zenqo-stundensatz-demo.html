@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Stundensatz-Rechner — ZENQO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2A5E;--navy2:#253070;
+  --lav:#7c6db5;--lav2:#ede9f8;
+  --em:#147048;--em2:#e8f5ee;
+  --ro:#c03040;--ro2:#fdeef0;
+  --am:#9a6400;--am2:#fef6e4;
+  --tl:#166e82;--tl2:#e6f4f7;
+  --bg:#f4f4f1;--white:#fff;
+  --border:#e2e2de;--txt:#1a1a18;--txt2:#5c5c57;--txt3:#8a8a85;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:13px;-webkit-font-smoothing:antialiased;}
+.header{background:var(--navy);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.header-logo{width:30px;height:30px;background:linear-gradient(135deg,#4a9d7f,#2d7a5e);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;}
+.header-name{font-size:13px;font-weight:600;color:#d4dff4;}
+.header-sub{font-size:10px;color:#8fa3c8;}
+.header-total{text-align:right;}
+.header-total-v{font-size:22px;font-weight:700;color:#7ee8b0;letter-spacing:-.5px;line-height:1;}
+.header-total-l{font-size:9px;color:#8fa3c8;text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px;display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.card-stripe{height:3px;}
+.card-stripe.navy{background:var(--navy);}
+.card-stripe.tl{background:var(--tl);}
+.card-stripe.lav{background:var(--lav);}
+.card-stripe.am{background:var(--am);}
+.card-head{padding:14px 18px 0;display:flex;align-items:center;gap:10px;}
+.card-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.card-num.navy{background:var(--navy);}
+.card-num.tl{background:var(--tl);}
+.card-num.lav{background:var(--lav);}
+.card-num.am{background:var(--am);}
+.card-title{font-size:14px;font-weight:700;color:var(--navy);}
+.card-sub{font-size:11px;color:var(--txt3);}
+.card-body{padding:14px 18px 18px;}
+.row{display:grid;gap:10px;margin-bottom:12px;}
+.row-2{grid-template-columns:1fr 1fr;}
+.row-3{grid-template-columns:1fr 1fr 1fr;}
+.row-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+.fg label{display:block;font-size:11px;font-weight:500;color:var(--txt2);margin-bottom:4px;}
+.inp-wrap{position:relative;}
+.inp-wrap input,.inp-wrap select{width:100%;padding:8px 38px 8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:13px;color:var(--txt);transition:border .15s;}
+.inp-wrap select{padding-right:10px;}
+.inp-wrap input:focus{outline:none;border-color:var(--lav);box-shadow:0 0 0 3px rgba(124,109,181,.08);}
+.inp-wrap .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--txt3);pointer-events:none;}
+.inp-hint{font-size:10px;color:var(--txt3);margin-top:3px;}
+.sdiv{height:1px;background:var(--border);margin:14px 0;}
+.sec-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--txt3);margin-bottom:10px;}
+.tog-group{display:flex;gap:4px;}
+.tog-btn{padding:6px 14px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--txt2);font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+.tog-btn:hover{border-color:var(--navy);color:var(--navy);}
+.tog-btn.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+.auto-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--em);background:var(--em2);padding:1px 6px;border-radius:3px;margin-left:5px;}
+.auto-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;}
+.auto-row-lbl{font-size:11px;color:var(--txt2);}
+.auto-row-val{font-size:13px;font-weight:700;color:var(--navy);}
+.auto-row-val.ro{color:var(--ro);}
+.auto-row-val.tl{color:var(--tl);}
+.auto-row-val.am{color:var(--am);}
+.auto-row-val.em{color:var(--em);}
+.slider-wrap{margin-bottom:12px;}
+.slider-wrap label{display:block;font-size:11px;font-weight:500;color:var(--txt2);margin-bottom:6px;}
+.slider-row{display:flex;align-items:center;gap:12px;}
+.slider-row input[type=range]{flex:1;height:4px;background:var(--border);border-radius:2px;appearance:none;cursor:pointer;outline:none;}
+.slider-row input[type=range]::-webkit-slider-thumb{appearance:none;width:16px;height:16px;background:var(--navy);border-radius:50%;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+.slider-val{min-width:44px;text-align:right;font-size:12px;font-weight:700;color:var(--navy);}
+.ust-note{background:var(--tl2);border:1px solid rgba(22,110,130,.2);border-radius:8px;padding:10px 12px;margin:10px 0;font-size:11px;color:#0d4a58;line-height:1.6;}
+.panel{position:sticky;top:20px;}
+.panel-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.panel-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--txt3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.rate-hero{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:10px;padding:20px;text-align:center;margin-bottom:14px;}
+.rate-val{font-size:42px;font-weight:700;color:#7ee8b0;letter-spacing:-1px;line-height:1;}
+.rate-label{font-size:9px;color:#8fa3c8;text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+.rate-tiers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px;}
+.rt{background:rgba(255,255,255,.06);border-radius:8px;padding:8px;text-align:center;}
+.rt-v{font-size:15px;font-weight:700;color:#d4dff4;}
+.rt-l{font-size:8px;color:#8fa3c8;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.rt.rec .rt-v{color:#7ee8b0;}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
+.mrow:last-child{border:none;}
+.mrow-lbl{font-size:11px;color:var(--txt2);}
+.mrow-val{font-size:12px;font-weight:700;color:var(--navy);}
+.mrow-val.em{color:var(--em);}
+.cost-item{margin-bottom:8px;}
+.cost-head{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;}
+.cost-name{color:var(--txt2);}
+.cost-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.cost-fill{height:100%;border-radius:3px;transition:width .3s;}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);}
+.check-item:last-child{border:none;}
+.check-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.check-icon.pass{background:var(--em2);color:var(--em);}
+.check-icon.warn{background:var(--am2);color:var(--am);}
+.check-icon.fail{background:var(--ro2);color:var(--ro);}
+.check-text{font-size:11px;color:var(--txt2);line-height:1.5;}
+.check-text strong{color:var(--txt);}
+.pkv-row{display:none;margin-top:8px;}
+.pkv-row.show{display:block;}
+select{width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:13px;color:var(--txt);}
+@media(max-width:780px){.wrap{grid-template-columns:1fr;}.panel{position:static;}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">ZQ</div>
+    <div>
+      <div class="header-name">ZENQO — Stundensatz-Rechner</div>
+      <div class="header-sub">Was muss ich pro Stunde verdienen?</div>
+    </div>
+  </div>
+  <div class="header-total">
+    <div class="header-total-v" id="hdr-rate">–</div>
+    <div class="header-total-l">Mindest-Stundensatz (netto)</div>
+  </div>
+</header>
+
+<div class="wrap">
+<div>
+
+<!-- Profil -->
+<div class="card">
+  <div class="card-stripe am"></div>
+  <div class="card-head">
+    <div class="card-num am">P</div>
+    <div><div class="card-title">Dein Profil</div><div class="card-sub">3 Angaben — Steuern &amp; KV werden automatisch berechnet</div></div>
+  </div>
+  <div class="card-body">
+    <div class="row row-3" style="align-items:start">
+      <div class="fg">
+        <label>Rechtsform</label>
+        <div class="tog-group">
+          <button class="tog-btn on" id="t-frei" onclick="setTog('status','freiberuf')">Freiberuf</button>
+          <button class="tog-btn" id="t-gew" onclick="setTog('status','gewerbe')">Gewerbe</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Krankenversicherung</label>
+        <div class="tog-group">
+          <button class="tog-btn on" id="t-gkv" onclick="setTog('kv','gkv')">GKV</button>
+          <button class="tog-btn" id="t-pkv" onclick="setTog('kv','pkv')">PKV</button>
+        </div>
+        <div class="pkv-row" id="pkv-row">
+          <label style="margin-top:8px;display:block;font-size:11px;font-weight:500;color:var(--txt2);margin-bottom:4px">PKV-Beitrag /Mo</label>
+          <div class="inp-wrap"><input type="number" id="stPKV" value="580" step="10"><span class="unit">€</span></div>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Bundesland</label>
+        <select id="stBL" onchange="calc()">
+          <option value="nw">NRW (475%)</option>
+          <option value="by">Bayern (490%)</option>
+          <option value="be">Berlin (410%)</option>
+          <option value="hh">Hamburg (470%)</option>
+          <option value="bw">Baden-Württemberg (380%)</option>
+          <option value="he">Hessen (460%)</option>
+          <option value="ni">Niedersachsen (390%)</option>
+          <option value="other">Sonstige (400%)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card 1 -->
+<div class="card">
+  <div class="card-stripe navy"></div>
+  <div class="card-head">
+    <div class="card-num navy">1</div>
+    <div><div class="card-title">Was du brauchst</div><div class="card-sub">Dein monatlicher Bedarf — was auf deinem Privatkonto landen soll</div></div>
+  </div>
+  <div class="card-body">
+    <div class="row row-2">
+      <div class="fg">
+        <label>Netto-Einkommen /Mo</label>
+        <div class="inp-wrap"><input type="number" id="stNet" value="3500" step="100"><span class="unit">€</span></div>
+        <div class="inp-hint">Nach allen Abzügen — was privat landet</div>
+      </div>
+      <div class="fg">
+        <label>Altersvorsorge /Mo</label>
+        <div class="inp-wrap"><input type="number" id="stRet" value="500" step="50"><span class="unit">€</span></div>
+        <div class="inp-hint">Rürup, ETF, private Rente</div>
+      </div>
+    </div>
+    <div class="row row-2">
+      <div class="fg">
+        <label>Rücklagen /Mo</label>
+        <div class="inp-wrap"><input type="number" id="stInv" value="200" step="50"><span class="unit">€</span></div>
+        <div class="inp-hint">Notgroschen, Investitionen</div>
+      </div>
+      <div class="fg">
+        <label>Krankentagegeld /Mo</label>
+        <div class="inp-wrap"><input type="number" id="stKtg" value="0" step="10"><span class="unit">€</span></div>
+        <div class="inp-hint">Empfohlen: €50–150 als Selbständige/r</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card 2 -->
+<div class="card">
+  <div class="card-stripe tl"></div>
+  <div class="card-head">
+    <div class="card-num tl">2</div>
+    <div><div class="card-title">Kosten &amp; Steuern</div><div class="card-sub">Betriebskosten manuell — Steuern &amp; KV automatisch aus Profil</div></div>
+  </div>
+  <div class="card-body">
+    <div class="row row-2" style="margin-bottom:16px">
+      <div class="fg">
+        <label>Betriebskosten /Mo</label>
+        <div class="inp-wrap"><input type="number" id="stFix" value="800" step="50"><span class="unit">€</span></div>
+        <div class="inp-hint">Software, Büro, Versicherungen, Buchhaltung</div>
+      </div>
+    </div>
+    <div class="sec-label">Auto-berechnet aus Profil <span class="auto-tag">automatisch</span></div>
+    <div class="auto-row">
+      <span class="auto-row-lbl">Krankenversicherung /Mo</span>
+      <span class="auto-row-val tl" id="auto-kv">–</span>
+    </div>
+    <div class="auto-row">
+      <span class="auto-row-lbl">Einkommensteuer + Soli /Mo</span>
+      <span class="auto-row-val ro" id="auto-est">–</span>
+    </div>
+    <div class="auto-row" id="auto-gew-row" style="display:none">
+      <span class="auto-row-lbl">Gewerbesteuer /Mo</span>
+      <span class="auto-row-val am" id="auto-gew">–</span>
+    </div>
+    <div class="auto-row" style="background:var(--em2);border-color:rgba(20,112,72,.2)">
+      <span class="auto-row-lbl" style="font-weight:600;color:var(--em)">Gesamt Abgaben /Mo</span>
+      <span class="auto-row-val em" id="auto-total">–</span>
+    </div>
+    <div class="sdiv"></div>
+    <div class="slider-wrap">
+      <label>Gewinnmarge <span style="font-weight:400;color:var(--txt3)">— Puffer für Wagnis &amp; Wachstum</span></label>
+      <div class="slider-row">
+        <input type="range" id="stMargin" min="0" max="30" value="10" oninput="document.getElementById('stMV').textContent=this.value+'%';calc()">
+        <span class="slider-val" id="stMV">10%</span>
+      </div>
+      <div class="inp-hint">0% = Selbstkostenbasis · empfohlen: 10–20%</div>
+    </div>
+    <div class="ust-note"><strong>Umsatzsteuer:</strong> Dein Stundensatz ist immer <strong>netto (ohne USt)</strong>. Die USt (19%) stellst du zusätzlich in Rechnung — sie ist kein Einkommen. Beispiel: 100€/h netto → Rechnung: 119€/h brutto.</div>
+  </div>
+</div>
+
+<!-- Card 3 -->
+<div class="card">
+  <div class="card-stripe lav"></div>
+  <div class="card-head">
+    <div class="card-num lav">3</div>
+    <div><div class="card-title">Zeitplanung</div><div class="card-sub">Wie viele Stunden kannst du wirklich fakturieren?</div></div>
+  </div>
+  <div class="card-body">
+    <div class="row row-2">
+      <div class="fg">
+        <label>Tage pro Woche</label>
+        <div class="inp-wrap"><input type="number" id="stWd" value="5" min="1" max="7"><span class="unit">Tage</span></div>
+      </div>
+      <div class="fg">
+        <label>Stunden pro Tag</label>
+        <div class="inp-wrap"><input type="number" id="stHpd" value="8" min="1" max="12" step="0.5"><span class="unit">Std</span></div>
+      </div>
+    </div>
+    <div class="sec-label" style="margin-top:4px">Nicht verfügbare Tage / Jahr</div>
+    <div class="row row-4">
+      <div class="fg"><label>Urlaub</label><div class="inp-wrap"><input type="number" id="stVac" value="30"><span class="unit">d</span></div></div>
+      <div class="fg"><label>Krankheit</label><div class="inp-wrap"><input type="number" id="stSick" value="10"><span class="unit">d</span></div></div>
+      <div class="fg"><label>Weiterbildung</label><div class="inp-wrap"><input type="number" id="stTrain" value="5"><span class="unit">d</span></div></div>
+      <div class="fg"><label>Feiertage</label><div class="inp-wrap"><input type="number" id="stHol" value="11"><span class="unit">d</span></div></div>
+    </div>
+    <div class="sdiv"></div>
+    <div class="slider-wrap">
+      <label>Nicht-fakturierbar <span style="font-weight:400;color:var(--txt3)">— Akquise, Admin, Marketing</span></label>
+      <div class="slider-row">
+        <input type="range" id="stNB" min="10" max="50" value="25" oninput="document.getElementById('stNBV').textContent=this.value+'%';calc()">
+        <span class="slider-val" id="stNBV">25%</span>
+      </div>
+      <div class="inp-hint">25% = realistisch · 40%+ = intensiver Vertriebsaufwand</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- PANEL -->
+<div class="panel">
+  <div class="panel-card">
+    <div class="rate-hero">
+      <div class="rate-val" id="p-rate">–</div>
+      <div class="rate-label">Mindest-Stundensatz (netto)</div>
+      <div class="rate-tiers">
+        <div class="rt"><div class="rt-v" id="p-min">–</div><div class="rt-l">Minimum</div></div>
+        <div class="rt rec"><div class="rt-v" id="p-rec">–</div><div class="rt-l">+20% Puffer</div></div>
+        <div class="rt"><div class="rt-v" id="p-com">–</div><div class="rt-l">Komfort</div></div>
+      </div>
+    </div>
+    <div class="panel-title">Schlüsselzahlen</div>
+    <div class="mrow"><span class="mrow-lbl">Fakturierbare Std./Jahr</span><span class="mrow-val" id="p-bh">–</span></div>
+    <div class="mrow"><span class="mrow-lbl">Fakturierbare Tage/Jahr</span><span class="mrow-val" id="p-bd">–</span></div>
+    <div class="mrow"><span class="mrow-lbl">Tagessatz</span><span class="mrow-val em" id="p-dr">–</span></div>
+    <div class="mrow"><span class="mrow-lbl">Jahresumsatz nötig</span><span class="mrow-val" id="p-ar">–</span></div>
+    <div class="mrow"><span class="mrow-lbl">Umsatz/Monat</span><span class="mrow-val em" id="p-mo">–</span></div>
+  </div>
+  <div class="panel-card">
+    <div class="panel-title">Kostenstruktur / Jahr</div>
+    <div id="p-costs"></div>
+  </div>
+  <div class="panel-card">
+    <div class="panel-title">Profi-Check</div>
+    <div id="p-check"></div>
+  </div>
+</div>
+</div>
+
+<script>
+const E=v=>'€'+Math.round(v).toLocaleString('de-DE');
+const P=v=>Math.round(v)+'%';
+function g(id){return document.getElementById(id);}
+function v(id){return parseFloat(g(id).value)||0;}
+let status='freiberuf',kv='gkv';
+const HS={nw:4.75,by:4.9,be:4.1,hh:4.7,bw:3.8,he:4.6,ni:3.9,other:4.0};
+
+function setTog(type,val){
+  if(type==='status'){status=val;g('t-frei').classList.toggle('on',val==='freiberuf');g('t-gew').classList.toggle('on',val==='gewerbe');}
+  else{kv=val;g('t-gkv').classList.toggle('on',val==='gkv');g('t-pkv').classList.toggle('on',val==='pkv');g('pkv-row').classList.toggle('show',val==='pkv');}
+  calc();
+}
+
+function calcESt(zvE){
+  if(zvE<=11784)return 0;
+  if(zvE<=17005){const y=(zvE-11784)/10000;return Math.round((932.3*y+1400)*y);}
+  if(zvE<=66760){const z=(zvE-17005)/10000;return Math.round((181.19*z+2397)*z+1025);}
+  if(zvE<=277826)return Math.round(0.42*zvE-10602);
+  return Math.round(0.45*zvE-18936);
+}
+function calcSoli(est){if(est<=20350)return 0;if(est<=37838)return Math.round(Math.min((est-20350)*0.119,est*0.055));return Math.round(est*0.055);}
+
+function calc(){
+  const net=v('stNet'),ret=v('stRet'),inv=v('stInv'),ktg=v('stKtg'),fix=v('stFix');
+  const margin=parseInt(g('stMargin').value)/100;
+  const wd=v('stWd'),hpd=v('stHpd'),vac=v('stVac'),sick=v('stSick'),train=v('stTrain'),hol=v('stHol');
+  const nb=parseInt(g('stNB').value)/100;
+  const bl=g('stBL').value;
+  const fixA=fix*12;
+  const billDays=Math.max(Math.round((wd*52-vac-sick-train-hol)*(1-nb)),1);
+  const billH=billDays*hpd;
+
+  // Iterate to converge
+  let ar=(net+ret+inv+ktg)*12+fixA;
+  for(let i=0;i<10;i++){
+    const gew=ar-fixA;
+    const kvMo=kv==='gkv'?Math.min(Math.max(gew/12*0.205,200),1130):v('stPKV');
+    const kvA=kvMo*12;
+    const vor=Math.min(kvA*0.96+ret*12,0.96*2*9696);
+    const zvE=Math.max(gew-vor,0);
+    const est=calcESt(zvE),soli=calcSoli(est);
+    const hs=HS[bl]||4.0;
+    const gst=status==='gewerbe'?Math.max((gew-24500)*0.035*hs,0):0;
+    ar=((net+ret+inv+ktg)*12+fixA+kvA+est+soli+gst)/(1-margin);
+  }
+
+  const gew=ar-fixA;
+  const kvMo=kv==='gkv'?Math.min(Math.max(gew/12*0.205,200),1130):v('stPKV');
+  const kvA=kvMo*12;
+  const vor=Math.min(kvA*0.96+ret*12,0.96*2*9696);
+  const zvE=Math.max(gew-vor,0);
+  const est=calcESt(zvE),soli=calcSoli(est);
+  const hs=HS[bl]||4.0;
+  const gst=status==='gewerbe'?Math.max((gew-24500)*0.035*hs,0):0;
+  const totAbg=kvA+est+soli+gst;
+
+  g('auto-kv').textContent=E(kvMo)+'/Mo';
+  g('auto-est').textContent=E(Math.round((est+soli)/12))+'/Mo';
+  g('auto-gew-row').style.display=status==='gewerbe'?'':'none';
+  if(status==='gewerbe')g('auto-gew').textContent=E(Math.round(gst/12))+'/Mo';
+  g('auto-total').textContent=E(Math.round(totAbg/12))+'/Mo';
+
+  const rate=billH>0?Math.ceil(ar/billH):0;
+  const rR5=Math.ceil(rate/5)*5,rec=Math.ceil(rate*1.2/5)*5,comf=Math.ceil(rate*1.5/10)*10;
+  g('hdr-rate').textContent=E(rR5);
+  g('p-rate').textContent=E(rR5);
+  g('p-min').textContent=E(rR5);g('p-rec').textContent=E(rec);g('p-com').textContent=E(comf);
+  g('p-bh').textContent=Math.round(billH);g('p-bd').textContent=billDays;
+  g('p-dr').textContent=E(rate*hpd);g('p-ar').textContent=E(ar);g('p-mo').textContent=E(ar/12);
+
+  const costs=[
+    {l:'Netto-Bedarf',v:net*12,c:'var(--navy)'},
+    {l:'Altersvorsorge',v:ret*12,c:'var(--lav)'},
+    {l:'Krankenversicherung',v:kvA,c:'var(--tl)'},
+    {l:'Einkommensteuer+Soli',v:est+soli,c:'var(--ro)'},
+    {l:'Betriebskosten',v:fixA,c:'var(--am)'},
+    ...(gst>0?[{l:'Gewerbesteuer',v:gst,c:'#946300'}]:[]),
+    ...((inv+ktg)*12>0?[{l:'Rücklagen & KTG',v:(inv+ktg)*12,c:'var(--txt3)'}]:[]),
+  ];
+  const mx=Math.max(...costs.map(c=>c.v),1);
+  g('p-costs').innerHTML=costs.map(c=>`<div class="cost-item"><div class="cost-head"><span class="cost-name">${c.l}</span><span style="font-size:11px;font-weight:600;color:${c.c}">${E(c.v)}</span></div><div class="cost-bar"><div class="cost-fill" style="width:${c.v/mx*100}%;background:${c.c}"></div></div></div>`).join('')+
+    `<div style="display:flex;justify-content:space-between;padding:8px 0 0;margin-top:4px;border-top:2px solid var(--border);font-size:12px;font-weight:700"><span>Jahresumsatz nötig</span><span style="color:var(--em)">${E(ar)}</span></div>`;
+
+  const aq=ar>0?totAbg/ar*100:0;
+  const checks=[
+    {l:'Altersvorsorge',pass:ret>=800,warn:ret>=500,ok:`${E(ret)}/Mo — solide.`,mid:`${E(ret)}/Mo — knapp.`,bad:`${E(ret)}/Mo — zu wenig!`},
+    {l:'Gewinnmarge',pass:margin>=0.1,warn:margin>=0.05,ok:`${P(margin*100)} — guter Puffer.`,mid:`${P(margin*100)} — knapp.`,bad:`${P(margin*100)} — kein Puffer!`},
+    {l:'Abgabenquote',pass:aq<35,warn:aq<45,ok:`${P(aq)} — gut.`,mid:`${P(aq)} — hoch.`,bad:`${P(aq)} — sehr hoch!`},
+    {l:'Stundensatz',pass:rate>=80,warn:rate>=50,ok:`${E(rR5)}/h — marktfähig.`,mid:`${E(rR5)}/h — knapp kalkuliert.`,bad:`${E(rR5)}/h — prüfe Kosten!`},
+  ];
+  g('p-check').innerHTML=checks.map(c=>{const s=c.pass?'pass':c.warn?'warn':'fail';return`<div class="check-item"><div class="check-icon ${s}">${s==='pass'?'✓':s==='warn'?'!':'✕'}</div><div class="check-text"><strong>${c.l}:</strong> ${c.pass?c.ok:c.warn?c.mid:c.bad}</div></div>`;}).join('');
+}
+
+document.querySelectorAll('input[type=number]').forEach(i=>i.addEventListener('input',calc));
+calc();
+</script>
+</body>
+</html>
